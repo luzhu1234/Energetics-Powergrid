@@ -1,0 +1,38 @@
+# ===== Gradle 构建产物 =====
+.gradle/
+build/
+buildSrc/build/
+out/
+bin/
+
+# ===== 运行/调试目录（体积最大） =====
+run/
+run-data/
+run-server/
+run-game-test-server/
+run-obf/
+
+# ===== IDE 配置 =====
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+*.launch
+
+# ===== 日志与崩溃报告 =====
+*.log
+logs/
+crash-reports/
+
+# ===== 系统杂项 =====
+.DS_Store
+Thumbs.db
+
+# ===== 备份与临时文件 =====
+*.bak
+*.tmp
+*~

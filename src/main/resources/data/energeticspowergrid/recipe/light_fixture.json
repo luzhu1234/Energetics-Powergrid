@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "item": "electroenergetics:connector"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "pattern": [
+    "I",
+    "A",
+    "C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "energeticspowergrid:light_fixture"
+  }
+}

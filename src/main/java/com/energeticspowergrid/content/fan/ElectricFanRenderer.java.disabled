@@ -1,0 +1,37 @@
+package com.energeticspowergrid.content.fan;
+
+import com.energeticspowergrid.EPGPartialModels;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+
+public class ElectricFanRenderer extends SafeBlockEntityRenderer<ElectricFanBlockEntity> {
+    public ElectricFanRenderer(BlockEntityRendererProvider.Context context) {
+    }
+
+    @Override
+    protected void renderSafe(ElectricFanBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        Direction direction = be.getBlockState().getValue(ElectricFanBlock.FACING);
+        var vb = buffer.getBuffer(RenderType.cutoutMipped());
+        var fan = CachedBuffers.partialFacing(EPGPartialModels.FAN_PROPELLER, be.getBlockState(), direction.getOpposite());
+
+        float time = AnimationTickHolder.getRenderTime(be.getLevel());
+        float speed = be.getSpeed() * 5;
+        if (speed > 0)
+            speed = Mth.clamp(speed, 80, 64 * 20);
+        if (speed < 0)
+            speed = Mth.clamp(speed, -64 * 20, -80);
+        float angle = (time * speed * 3 / 10f) % 360;
+        angle = angle / 180f * (float) Math.PI;
+
+        fan.light(light)
+                .rotateCentered(angle, Direction.get(Direction.AxisDirection.POSITIVE, direction.getAxis()))
+                .renderInto(ms, vb);
+    }
+}

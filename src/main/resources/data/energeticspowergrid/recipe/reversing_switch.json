@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "electroenergetics:double_switch" }
+  ],
+  "result": {
+    "count": 1,
+    "id": "energeticspowergrid:reversing_switch"
+  }
+}

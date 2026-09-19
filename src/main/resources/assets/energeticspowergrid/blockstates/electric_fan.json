@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=down": { "model": "energeticspowergrid:block/electric_fan/block", "x": 180 },
+    "facing=east": { "model": "energeticspowergrid:block/electric_fan/block", "x": 90, "y": 90 },
+    "facing=north": { "model": "energeticspowergrid:block/electric_fan/block", "x": 90 },
+    "facing=south": { "model": "energeticspowergrid:block/electric_fan/block", "x": -90 },
+    "facing=up": { "model": "energeticspowergrid:block/electric_fan/block" },
+    "facing=west": { "model": "energeticspowergrid:block/electric_fan/block", "x": 90, "y": -90 }
+  }
+}

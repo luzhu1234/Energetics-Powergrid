@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": { "tag": "c:plates/iron" },
+    "C": { "item": "electroenergetics:connector" },
+    "R": { "item": "electroenergetics:resistor" }
+  },
+  "pattern": [
+    " C ",
+    "IRI",
+    "IRI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "energeticspowergrid:heating_coil"
+  }
+}

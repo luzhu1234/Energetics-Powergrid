@@ -1,0 +1,163 @@
+package com.energeticspowergrid.content.fan;
+
+import com.simibubi.create.content.kinetics.fan.AirCurrent;
+import com.simibubi.create.content.kinetics.fan.IAirCurrentSource;
+import com.simibubi.create.content.logistics.chute.ChuteBlockEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+public class ElectricFanBlockEntity extends SmartBlockEntity implements IAirCurrentSource {
+    public AirCurrent airCurrent;
+    protected int airCurrentUpdateCooldown;
+    protected int entitySearchCooldown;
+    protected boolean updateAirFlow;
+
+    private float speed;
+    private int prevSpeed;
+
+    public ElectricFanBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+        airCurrent = new AirCurrent(this);
+        updateAirFlow = true;
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        registerAwardables(behaviours, AllAdvancements.FAN_PROCESSING);
+    }
+
+    public void setSpeed(float speed) {
+        if (Math.abs(this.speed - speed) < 0.05f && (this.speed == 0) == (speed == 0))
+            return;
+        this.speed = speed;
+        if (level != null && !level.isClientSide)
+            sendData();
+    }
+
+    @Override
+    public AirCurrent getAirCurrent() {
+        return airCurrent;
+    }
+
+    @Nullable
+    @Override
+    public Level getAirCurrentWorld() {
+        return level;
+    }
+
+    @Override
+    public BlockPos getAirCurrentPos() {
+        return worldPosition;
+    }
+
+    @Override
+    public float getSpeed() {
+        return speed;
+    }
+
+    @Override
+    public Direction getAirflowOriginSide() {
+        return getBlockState().getValue(ElectricFanBlock.FACING);
+    }
+
+    @Override
+    public Direction getAirFlowDirection() {
+        if (speed == 0)
+            return null;
+        Direction facing = getBlockState().getValue(ElectricFanBlock.FACING);
+        return speed > 0 ? facing : facing.getOpposite();
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        updateChute();
+    }
+
+    @Override
+    public boolean isSourceRemoved() {
+        return remove;
+    }
+
+    public void onSpeedChanged() {
+        updateAirFlow = true;
+        updateChute();
+    }
+
+    public void updateChute() {
+        Direction direction = getBlockState().getValue(ElectricFanBlock.FACING);
+        if (!direction.getAxis().isVertical())
+            return;
+        BlockEntity poweredChute = level.getBlockEntity(worldPosition.relative(direction));
+        if (!(poweredChute instanceof ChuteBlockEntity chuteBE))
+            return;
+        if (direction == Direction.DOWN)
+            chuteBE.updatePull();
+        else
+            chuteBE.updatePush(1);
+    }
+
+    public void blockInFrontChanged() {
+        updateAirFlow = true;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        boolean server = !level.isClientSide || isVirtual();
+        int rounded = (int) getSpeed();
+        if (rounded != prevSpeed) {
+            onSpeedChanged();
+            prevSpeed = rounded;
+        }
+
+        if (server && airCurrentUpdateCooldown-- <= 0) {
+            airCurrentUpdateCooldown = AllConfigs.server().kinetics.fanBlockCheckRate.get();
+            updateAirFlow = true;
+        }
+
+        if (updateAirFlow) {
+            updateAirFlow = false;
+            airCurrent.rebuild();
+            sendData();
+        }
+
+        if (getSpeed() == 0)
+            return;
+
+        if (entitySearchCooldown-- <= 0) {
+            entitySearchCooldown = 5;
+            airCurrent.findEntities();
+        }
+
+        airCurrent.tick();
+    }
+
+    @Override
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
+        speed = tag.getFloat("Speed");
+        if (clientPacket)
+            airCurrent.rebuild();
+    }
+
+    @Override
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+        tag.putFloat("Speed", speed);
+    }
+}

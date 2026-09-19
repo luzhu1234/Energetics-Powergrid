@@ -1,0 +1,17 @@
+{
+  "itemGroup.energeticspowergrid": "Energetics Power Grid",
+  "block.energeticspowergrid.light_fixture": "Light Fixture",
+  "block.energeticspowergrid.factory_light": "Factory Light",
+  "block.energeticspowergrid.conductive_casing": "Conductive Casing",
+  "block.energeticspowergrid.electric_fan": "Electric Blower",
+  "block.energeticspowergrid.heating_coil": "Heating Coil",
+  "block.energeticspowergrid.reversing_switch": "Reversing Switch",
+  "item.energeticspowergrid.lv_light_bulb": "LV Incandescent Lamp",
+  "item.energeticspowergrid.light_bulb": "Incandescent Lamp",
+  "item.energeticspowergrid.growth_lamp": "Growth Lamp",
+  "energeticspowergrid.tooltip.resistance": "Resistance",
+  "energeticspowergrid.tooltip.voltage": "Voltage",
+  "energeticspowergrid.tooltip.power": "Power",
+  "energeticspowergrid.gui.heater.info_header": "Heating Coil",
+  "energeticspowergrid.gui.heater.title": "Temperature"
+}

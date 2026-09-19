@@ -1,0 +1,151 @@
+package com.energeticspowergrid.content.fan;
+
+import com.energeticspowergrid.EPGBlockEntityTypes;
+import com.energeticspowergrid.EPGSimulatedDevices;
+import com.george_vi.electroenergetics.devices.device.SimulatedDeviceType;
+import com.george_vi.electroenergetics.foundation.base.SimpleElectricalDeviceBlock;
+import com.george_vi.electroenergetics.foundation.nodes.NodeConfigurator;
+import com.simibubi.create.content.logistics.chute.AbstractChuteBlock;
+import com.simibubi.create.foundation.block.IBE;
+import net.createmod.catnip.levelWrappers.WrappedLevel;
+import net.createmod.catnip.math.VoxelShaper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+
+public class ElectricFanBlock extends SimpleElectricalDeviceBlock<ElectricFanDevice> implements IBE<ElectricFanBlockEntity> {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+
+    public static final NodeConfigurator NODES = new NodeConfigurator.Builder()
+            .add(5.5f, 2f, 8f)
+            .add(10.5f, 2f, 8f)
+            .simple(Direction.UP);
+
+    private static final VoxelShaper SHAPE = VoxelShaper.forDirectional(
+            Shapes.or(box(0, 4, 0, 16, 12, 16), box(5.5, 2, 5.5, 10.5, 4, 10.5)),
+            Direction.UP);
+
+    public ElectricFanBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE.get(state.getValue(FACING));
+    }
+
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction face = context.getClickedFace();
+        BlockState placedOn = context.getLevel().getBlockState(context.getClickedPos().relative(face.getOpposite()));
+        BlockState placedOnOpposite = context.getLevel().getBlockState(context.getClickedPos().relative(face));
+        if (AbstractChuteBlock.isChute(placedOn))
+            return defaultBlockState().setValue(FACING, face.getOpposite());
+        if (AbstractChuteBlock.isChute(placedOnOpposite))
+            return defaultBlockState().setValue(FACING, face);
+
+        Direction preferred = context.getNearestLookingDirection();
+        return defaultBlockState().setValue(FACING,
+                context.getPlayer() != null && context.getPlayer().isShiftKeyDown() ? preferred : preferred.getOpposite());
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, worldIn, pos, oldState, isMoving);
+        blockUpdate(worldIn, pos);
+    }
+
+    @Override
+    public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags, int count) {
+        super.updateIndirectNeighbourShapes(stateIn, worldIn, pos, flags, count);
+        blockUpdate(worldIn, pos);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        blockUpdate(worldIn, pos);
+    }
+
+    protected void blockUpdate(LevelAccessor worldIn, BlockPos pos) {
+        if (worldIn instanceof WrappedLevel)
+            return;
+        withBlockEntityDo(worldIn, pos, ElectricFanBlockEntity::blockInFrontChanged);
+    }
+
+    @Override
+    public BlockState updateAfterWrenched(BlockState newState, UseOnContext context) {
+        blockUpdate(context.getLevel(), context.getClickedPos());
+        return newState;
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
+    }
+
+    @Override
+    public SimulatedDeviceType<ElectricFanDevice> getDevice() {
+        return EPGSimulatedDevices.ELECTRIC_FAN.get();
+    }
+
+    @Override
+    public Map<Integer, Vec3> getNodePositions(Level level, BlockPos pos, BlockState state) {
+        return NODES.getNodes(state.getValue(FACING));
+    }
+
+    @Override
+    public Vec3 getNodePosition(Level level, BlockPos pos, BlockState state, int id) {
+        return NODES.getNodePos(state.getValue(FACING), id);
+    }
+
+    @Override
+    public float getNodeSize(Level level, BlockPos pos, BlockState state, int id) {
+        return 2 / 16f;
+    }
+
+    @Override
+    public Class<ElectricFanBlockEntity> getBlockEntityClass() {
+        return ElectricFanBlockEntity.class;
+    }
+
+    @Override
+    public BlockEntityType<? extends ElectricFanBlockEntity> getBlockEntityType() {
+        return EPGBlockEntityTypes.ELECTRIC_FAN.get();
+    }
+}

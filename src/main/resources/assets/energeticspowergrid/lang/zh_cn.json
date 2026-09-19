@@ -1,0 +1,14 @@
+{
+  "itemGroup.energeticspowergrid": "电力学：交错电网",
+  "block.energeticspowergrid.light_fixture": "灯座",
+  "block.energeticspowergrid.factory_light": "工厂灯",
+  "block.energeticspowergrid.conductive_casing": "电气机壳",
+  "block.energeticspowergrid.electric_fan": "电动鼓风机",
+  "block.energeticspowergrid.heating_coil": "加热线圈",
+  "block.energeticspowergrid.reversing_switch": "换向开关",
+  "item.energeticspowergrid.lv_light_bulb": "低压白炽灯",
+  "item.energeticspowergrid.light_bulb": "白炽灯",
+  "item.energeticspowergrid.growth_lamp": "催熟灯",
+  "energeticspowergrid.gui.heater.info_header": "加热线圈",
+  "energeticspowergrid.gui.heater.title": "温度"
+}

@@ -1,0 +1,62 @@
+package com.energeticspowergrid.content.fan;
+
+import com.energeticspowergrid.config.EPGConfigs;
+import com.george_vi.electroenergetics.devices.device.DevicesSavedData;
+import com.george_vi.electroenergetics.devices.device.SimulatedDeviceType;
+import com.george_vi.electroenergetics.foundation.device.SimpleElectricalDevice;
+import com.george_vi.electroenergetics.simulation.BridgeCollector;
+import com.george_vi.electroenergetics.simulation.SimulationResults;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class ElectricFanDevice extends SimpleElectricalDevice {
+    public ElectricFanBlockEntity be;
+    private float speed;
+
+    public ElectricFanDevice(Level level, BlockPos pos, DevicesSavedData deviceSD, SimulatedDeviceType<?> type) {
+        super(level, pos, deviceSD, type);
+    }
+
+    @Override
+    public void preTick(BridgeCollector bridges) {
+        bridges.builder(pos).resistor(0, 1, EPGConfigs.server().electricFanResistance.getF());
+    }
+
+    @Override
+    public void postTick(SimulationResults results) {
+        double current = results.getCurrentThrough(pos, 0, 1);
+        if (!Double.isFinite(current))
+            current = 0;
+        float next = (float) (current * EPGConfigs.server().electricFanCurrentToSpeed.getF());
+        if (Math.abs(next) < 1)
+            next = 0;
+        speed = Mth.clamp(next, -256, 256);
+
+        if (be == null && level.isLoaded(pos) && level.getBlockEntity(pos) instanceof ElectricFanBlockEntity found)
+            be = found;
+        if (be != null) {
+            if (be.isRemoved())
+                be = null;
+            else
+                be.setSpeed(speed);
+        }
+    }
+
+    @Override
+    public void read(CompoundTag tag) {
+        speed = tag.getFloat("Speed");
+    }
+
+    @Override
+    public void write(CompoundTag tag) {
+        tag.putFloat("Speed", speed);
+    }
+
+    @Override
+    public boolean shouldRemove(BlockState oldState, BlockState newState) {
+        return !(newState.getBlock() instanceof ElectricFanBlock);
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "energeticspowergrid:block/conductive_casing" }
+  }
+}

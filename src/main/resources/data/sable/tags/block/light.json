@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "energeticspowergrid:light_fixture",
+    "energeticspowergrid:factory_light"
+  ]
+}

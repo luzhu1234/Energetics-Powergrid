@@ -6,6 +6,7 @@
   "block.energeticspowergrid.electric_fan": "Electric Blower",
   "block.energeticspowergrid.heating_coil": "Heating Coil",
   "block.energeticspowergrid.reversing_switch": "Reversing Switch",
+  "block.energeticspowergrid.excitation_stator": "Excitation Stator",
   "item.energeticspowergrid.lv_light_bulb": "LV Incandescent Lamp",
   "item.energeticspowergrid.light_bulb": "Incandescent Lamp",
   "item.energeticspowergrid.growth_lamp": "Growth Lamp",
@@ -13,5 +14,11 @@
   "energeticspowergrid.tooltip.voltage": "Voltage",
   "energeticspowergrid.tooltip.power": "Power",
   "energeticspowergrid.gui.heater.info_header": "Heating Coil",
-  "energeticspowergrid.gui.heater.title": "Temperature"
+  "energeticspowergrid.gui.heater.title": "Temperature",
+  "energeticspowergrid.gui.excitation.title": "Excitation Strength",
+  "block.energeticspowergrid.inverter": "Inverter",
+  "energeticspowergrid.nodes.input_positive": "Input +",
+  "energeticspowergrid.nodes.input_negative": "Input −",
+  "energeticspowergrid.nodes.output_positive": "Output +",
+  "energeticspowergrid.nodes.output_negative": "Output −"
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": { "item": "create:andesite_alloy" },
+    "C": { "item": "electroenergetics:copper_wire" },
+    "M": { "item": "electroenergetics:magnet" }
+  },
+  "pattern": [
+    "ACA",
+    "CMC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "energeticspowergrid:excitation_stator"
+  }
+}

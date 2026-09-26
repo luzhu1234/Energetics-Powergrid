@@ -1,5 +1,6 @@
 package com.energeticspowergrid;
 
+import com.energeticspowergrid.content.excitation.ExcitationStatorDevice;
 import com.energeticspowergrid.content.factorylight.FactoryLightDevice;
 // import com.energeticspowergrid.content.fan.ElectricFanDevice;
 import com.energeticspowergrid.content.fixture.LightFixtureDevice;
@@ -40,6 +41,16 @@ public class EPGSimulatedDevices {
             DEVICES.register("reversing_switch", () -> new SimulatedDeviceType<>(
                     EnergeticsPowerGrid.rl("reversing_switch"),
                     (type, level, pos, sd) -> new ReversingSwitchDevice(level, pos, sd, type)));
+
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<ExcitationStatorDevice>> EXCITATION_STATOR =
+            DEVICES.register("excitation_stator", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("excitation_stator"),
+                    (type, level, pos, sd) -> new ExcitationStatorDevice(level, pos, sd, type)));
+
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.inverter.InverterDevice>> INVERTER =
+            DEVICES.register("inverter", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("inverter"),
+                    (type, level, pos, sd) -> new com.energeticspowergrid.content.inverter.InverterDevice(level, pos, sd, type)));
 
     public static void register(IEventBus bus) {
         DEVICES.register(bus);

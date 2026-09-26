@@ -25,6 +25,8 @@ public class EPGCreativeTab {
                         // output.accept(EPGBlocks.ELECTRIC_FAN.asStack());
                         output.accept(EPGBlocks.HEATING_COIL.asStack());
                         output.accept(EPGBlocks.REVERSING_SWITCH.asStack());
+                        output.accept(EPGBlocks.EXCITATION_STATOR.asStack());
+                        output.accept(EPGBlocks.INVERTER.asStack());
                     })
                     .build());
 

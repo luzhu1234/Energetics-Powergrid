@@ -6,9 +6,16 @@
   "block.energeticspowergrid.electric_fan": "电动鼓风机",
   "block.energeticspowergrid.heating_coil": "加热线圈",
   "block.energeticspowergrid.reversing_switch": "换向开关",
+  "block.energeticspowergrid.excitation_stator": "励磁定子",
   "item.energeticspowergrid.lv_light_bulb": "低压白炽灯",
   "item.energeticspowergrid.light_bulb": "白炽灯",
   "item.energeticspowergrid.growth_lamp": "催熟灯",
   "energeticspowergrid.gui.heater.info_header": "加热线圈",
-  "energeticspowergrid.gui.heater.title": "温度"
+  "energeticspowergrid.gui.heater.title": "温度",
+  "energeticspowergrid.gui.excitation.title": "励磁强度",
+  "block.energeticspowergrid.inverter": "逆变器",
+  "energeticspowergrid.nodes.input_positive": "输入正极",
+  "energeticspowergrid.nodes.input_negative": "输入负极",
+  "energeticspowergrid.nodes.output_positive": "输出正极",
+  "energeticspowergrid.nodes.output_negative": "输出负极"
 }

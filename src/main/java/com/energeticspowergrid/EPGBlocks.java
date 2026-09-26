@@ -1,5 +1,6 @@
 package com.energeticspowergrid;
 
+import com.energeticspowergrid.content.excitation.ExcitationStatorBlock;
 import com.energeticspowergrid.content.factorylight.FactoryLightBlock;
 import com.energeticspowergrid.content.factorylight.FactoryLightLightBlock;
 // import com.energeticspowergrid.content.fan.ElectricFanBlock;
@@ -129,6 +130,31 @@ public class EPGBlocks {
 
     public static final BlockEntry<ReversingSwitchBlock> REVERSING_SWITCH = REGISTRATE.block("reversing_switch", ReversingSwitchBlock::new)
             .tag(CEETags.LIGHT)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE).noOcclusion())
+            .blockstate((c, p) -> DirectionalRolledDeviceBlock.generateBlockState(c, p,
+                    bs -> ResourceLocation.fromNamespaceAndPath("electroenergetics",
+                            bs.getValue(com.george_vi.electroenergetics.content.cut_off_switch.CutOffSwitchBlock.CLOSED)
+                                    ? "block/double_switch/block_closed"
+                                    : "block/double_switch/block")))
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(),
+                    ResourceLocation.fromNamespaceAndPath("electroenergetics", "block/double_switch/block")))
+            .build()
+            .register();
+
+    public static final BlockEntry<ExcitationStatorBlock> EXCITATION_STATOR = REGISTRATE.block("excitation_stator", ExcitationStatorBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(),
+                    ResourceLocation.fromNamespaceAndPath("electroenergetics", "block/stator/block")))
+            .build()
+            .register();
+
+    public static final BlockEntry<com.energeticspowergrid.content.inverter.InverterBlock> INVERTER = REGISTRATE.block("inverter", com.energeticspowergrid.content.inverter.InverterBlock::new)
             .initialProperties(SharedProperties::stone)
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE).noOcclusion())
             .blockstate((c, p) -> DirectionalRolledDeviceBlock.generateBlockState(c, p,

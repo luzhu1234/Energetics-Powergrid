@@ -9,6 +9,9 @@ license="${mod_license}"
     authors="${mod_authors}"
     description='''${mod_description}'''
 
+[[mixins]]
+    config="${mod_id}.mixins.json"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
@@ -33,6 +36,6 @@ license="${mod_license}"
 [[dependencies.${mod_id}]]
     modId="electroenergetics"
     type="required"
-    versionRange="[1.2.0,)"
+    versionRange="[1.1.1,)"
     ordering="AFTER"
     side="BOTH"

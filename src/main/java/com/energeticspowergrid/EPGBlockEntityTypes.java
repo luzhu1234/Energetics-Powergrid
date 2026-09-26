@@ -1,5 +1,6 @@
 package com.energeticspowergrid;
 
+import com.energeticspowergrid.content.excitation.ExcitationStatorBlockEntity;
 import com.energeticspowergrid.content.factorylight.FactoryLightBlockEntity;
 import com.energeticspowergrid.content.factorylight.FactoryLightLightBlockEntity;
 import com.energeticspowergrid.content.factorylight.FactoryLightRenderer;
@@ -40,6 +41,11 @@ public class EPGBlockEntityTypes {
     public static final BlockEntityEntry<HeatingCoilBlockEntity> HEATING_COIL =
             REGISTRATE.blockEntity("heating_coil", HeatingCoilBlockEntity::new)
                     .validBlock(EPGBlocks.HEATING_COIL)
+                    .register();
+
+    public static final BlockEntityEntry<ExcitationStatorBlockEntity> EXCITATION_STATOR =
+            REGISTRATE.blockEntity("excitation_stator", ExcitationStatorBlockEntity::new)
+                    .validBlock(EPGBlocks.EXCITATION_STATOR)
                     .register();
 
     public static void register() {

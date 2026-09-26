@@ -9,6 +9,7 @@ import com.george_vi.electroenergetics.foundation.device.SimpleElectricalDevice;
 import com.george_vi.electroenergetics.foundation.nodes.InWorldNode;
 import com.george_vi.electroenergetics.simulation.BridgeCollector;
 import com.george_vi.electroenergetics.simulation.SimulationResults;
+import com.george_vi.electroenergetics.simulation.electrical_properties.ElectricalProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -109,8 +110,10 @@ public class FactoryLightDevice extends SimpleElectricalDevice {
             return;
         if (other.getValue(FactoryLightBlock.HORIZONTAL_AXIS) != self.getValue(FactoryLightBlock.HORIZONTAL_AXIS))
             return;
-        bridges.bridge(new InWorldNode(0, pos), new InWorldNode(0, neighbor), SHARE_RESISTANCE);
-        bridges.bridge(new InWorldNode(1, pos), new InWorldNode(1, neighbor), SHARE_RESISTANCE);
+        // CEE 1.1.1 has bridge(Node, Node, ElectricalProperties) but not the double overload added in 1.2.0.
+        ElectricalProperties share = ElectricalProperties.resistor(SHARE_RESISTANCE);
+        bridges.bridge(new InWorldNode(0, pos), new InWorldNode(0, neighbor), share);
+        bridges.bridge(new InWorldNode(1, pos), new InWorldNode(1, neighbor), share);
     }
 
     @Override

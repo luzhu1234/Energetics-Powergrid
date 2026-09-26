@@ -53,6 +53,28 @@ public class EPGConfigs {
                 "Thermal mass of the heating coil");
         public final ConfigFloat reversingSwitchResistance = f(0.001f, 0.0001f, 10, "reversingSwitchResistance",
                 "Contact resistance of the reversing switch");
+        public final ConfigFloat excitationStatorResistance = f(100, 0.1f, 100000, "excitationStatorResistance",
+                "Internal resistance of the excitation stator winding");
+        public final ConfigFloat excitationStatorFieldFactor = f(1, 0, 1000, "excitationStatorFieldFactor",
+                "The y in B = I * U * y, scaling excitation strength per stator");
+        public final ConfigFloat inverterResistance = f(0.001f, 0.0001f, 10, "inverterResistance",
+                "Contact resistance of the inverter's straight-through mode");
+        public final ConfigFloat inverterOutputResistance = f(0.5f, 0.01f, 100, "inverterOutputResistance",
+                "Internal resistance of the inverter's AC output");
+        public final ConfigInt inverterFrequency = i(50, 1, 400, "inverterFrequency",
+                "Frequency of the inverter's square wave output in Hz");
+        public final ConfigFloat excitationFieldPerStator = f(1000, 1, 100000, "excitationFieldPerStator",
+                "Excitation strength that matches one vanilla stator's pull on a rotor");
+        public final ConfigFloat vanillaStatorStressFactor = f(0.1f, 0, 1, "vanillaStatorStressFactor",
+                "Multiplier applied to what a vanilla stator contributes to a rotor - both its stress draw and the brushes' power output read this weakened count");
+        public final ConfigFloat hertzPerRpm = f(6.4f, 0.01f, 100, "hertzPerRpm",
+                "Rotational speed to AC frequency, matching electroenergetics' own value");
+        public final ConfigFloat frequencyDipMaxHz = f(0.08f, 0, 5, "frequencyDipMaxHz",
+                "Upper bound on the frequency dip or lift caused by a load change");
+        public final ConfigFloat frequencyDipHzPerKilowatt = f(0.02f, 0, 10, "frequencyDipHzPerKilowatt",
+                "Frequency dip per kilowatt of load step, before the cap is applied");
+        public final ConfigInt frequencyDipDecayTicks = i(100, 1, 600, "frequencyDipDecayTicks",
+                "Ticks over which a frequency dip decays back to the attainable frequency, 100 = 5 seconds");
 
         @Override
         public String getName() {

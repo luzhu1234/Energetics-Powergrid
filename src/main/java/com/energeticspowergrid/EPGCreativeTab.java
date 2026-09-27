@@ -27,6 +27,7 @@ public class EPGCreativeTab {
                         output.accept(EPGBlocks.REVERSING_SWITCH.asStack());
                         output.accept(EPGBlocks.EXCITATION_STATOR.asStack());
                         output.accept(EPGBlocks.INVERTER.asStack());
+                        output.accept(EPGBlocks.TRANSISTOR.asStack());
                     })
                     .build());
 

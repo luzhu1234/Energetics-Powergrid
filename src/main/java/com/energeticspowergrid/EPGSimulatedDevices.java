@@ -52,6 +52,11 @@ public class EPGSimulatedDevices {
                     EnergeticsPowerGrid.rl("inverter"),
                     (type, level, pos, sd) -> new com.energeticspowergrid.content.inverter.InverterDevice(level, pos, sd, type)));
 
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.transistor.TransistorDevice>> TRANSISTOR =
+            DEVICES.register("transistor", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("transistor"),
+                    (type, level, pos, sd) -> new com.energeticspowergrid.content.transistor.TransistorDevice(level, pos, sd, type)));
+
     public static void register(IEventBus bus) {
         DEVICES.register(bus);
     }

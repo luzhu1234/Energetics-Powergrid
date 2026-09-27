@@ -144,6 +144,16 @@ public class EPGBlocks {
             .build()
             .register();
 
+    public static final BlockEntry<com.energeticspowergrid.content.transistor.TransistorBlock> TRANSISTOR = REGISTRATE.block("transistor", com.energeticspowergrid.content.transistor.TransistorBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/transistor")))
+            .build()
+            .register();
+
     public static final BlockEntry<ExcitationStatorBlock> EXCITATION_STATOR = REGISTRATE.block("excitation_stator", ExcitationStatorBlock::new)
             .initialProperties(SharedProperties::stone)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY))

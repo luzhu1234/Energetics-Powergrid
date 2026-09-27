@@ -48,6 +48,11 @@ public class EPGBlockEntityTypes {
                     .validBlock(EPGBlocks.EXCITATION_STATOR)
                     .register();
 
+    public static final BlockEntityEntry<com.energeticspowergrid.content.transistor.TransistorBlockEntity> TRANSISTOR =
+            REGISTRATE.blockEntity("transistor", com.energeticspowergrid.content.transistor.TransistorBlockEntity::new)
+                    .validBlock(EPGBlocks.TRANSISTOR)
+                    .register();
+
     public static void register() {
     }
 }

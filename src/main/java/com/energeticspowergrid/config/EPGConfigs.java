@@ -65,8 +65,8 @@ public class EPGConfigs {
                 "Frequency of the inverter's square wave output in Hz");
         public final ConfigFloat excitationFieldPerStator = f(1000, 1, 100000, "excitationFieldPerStator",
                 "Excitation strength that matches one vanilla stator's pull on a rotor");
-        public final ConfigFloat vanillaStatorStressFactor = f(0.1f, 0, 1, "vanillaStatorStressFactor",
-                "Multiplier applied to what a vanilla stator contributes to a rotor - both its stress draw and the brushes' power output read this weakened count");
+        public final ConfigFloat vanillaStatorField = f(100, 0, 10000, "vanillaStatorField",
+                "Fixed excitation strength a vanilla stator contributes to a rotor, making it part of the excitation system (100 = one tenth of a stator equivalent)");
         public final ConfigFloat hertzPerRpm = f(6.4f, 0.01f, 100, "hertzPerRpm",
                 "Rotational speed to AC frequency, matching electroenergetics' own value");
         public final ConfigFloat frequencyDipMaxHz = f(0.08f, 0, 5, "frequencyDipMaxHz",

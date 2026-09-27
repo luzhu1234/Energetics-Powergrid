@@ -20,5 +20,12 @@
   "energeticspowergrid.nodes.input_positive": "Input +",
   "energeticspowergrid.nodes.input_negative": "Input −",
   "energeticspowergrid.nodes.output_positive": "Output +",
-  "energeticspowergrid.nodes.output_negative": "Output −"
+  "energeticspowergrid.nodes.output_negative": "Output −",
+  "block.energeticspowergrid.transistor": "Transistor",
+  "energeticspowergrid.nodes.base": "Base (B)",
+  "energeticspowergrid.nodes.collector": "Collector (C)",
+  "energeticspowergrid.nodes.emitter": "Emitter (E)",
+  "energeticspowergrid.gui.transistor.beta": "Amplification β",
+  "energeticspowergrid.gui.transistor.vbe": "Switch-on Voltage V_BE",
+  "energeticspowergrid.gui.transistor.icmax": "Max Collector Current"
 }

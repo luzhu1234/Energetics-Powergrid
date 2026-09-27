@@ -1,5 +1,6 @@
 package com.energeticspowergrid.content.excitation;
 
+import com.energeticspowergrid.config.EPGConfigs;
 import com.george_vi.electroenergetics.CEEBlocks;
 import com.george_vi.electroenergetics.content.rotor.AlternatorRotorBlock;
 import com.george_vi.electroenergetics.content.rotor.StatorBlock;
@@ -8,57 +9,51 @@ import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Read-only measurements the rotor needs from the four slots around it. Kept out of the mixin so
- * the loop can be reused; everything here is plain block queries, driven from the rotor's existing
- * lazy tick.
+ * Excitation measurements the rotor needs from the four slots around it.
+ * <p>
+ * Vanilla stators are part of the same excitation system: each one contributes a fixed field
+ * strength (default 100, config) instead of the special-cased weakening they used to have, so
+ * mixing the two stator kinds behaves as one uniform pool. 1000 field equals one vanilla
+ * stator's worth of pull, which matches the old 1/10 factor exactly.
  */
 public final class ExcitationFields {
     private ExcitationFields() {
     }
 
     /**
-     * The vanilla stator count the rotor would have seen on its own, matching electroenergetics
-     * exactly: 3 per stator that can power this rotor.
-     */
-    public static int vanillaMagnets(BlockGetter level, BlockPos rotorPos, BlockState rotorState) {
-        Direction.Axis axis = rotorState.getValue(AlternatorRotorBlock.AXIS);
-        int magnets = 0;
-        for (Direction direction : Iterate.directions) {
-            if (direction.getAxis() == axis)
-                continue;
-            BlockPos statorPos = rotorPos.relative(direction);
-            BlockState statorState = level.getBlockState(statorPos);
-            if (CEEBlocks.STATOR.has(statorState)
-                    && StatorBlock.canPowerRotor(statorPos, statorState, rotorPos, rotorState))
-                magnets += 3;
-        }
-        return magnets;
-    }
-
-    /**
-     * Signed sum of the excitation field of every excitation stator that can power the rotor.
-     * Summed before taking the magnitude, so opposing stators cancel and a reversed pair reads zero.
+     * Signed sum of the excitation field of every stator that can power the rotor: excitation
+     * stators contribute their live field, vanilla stators their fixed one. Summed before taking
+     * the magnitude, so opposing stators cancel and a reversed pair reads zero.
      */
     public static double excitationSum(ServerLevel serverLevel, BlockPos rotorPos, BlockState rotorState) {
         Direction.Axis axis = rotorState.getValue(AlternatorRotorBlock.AXIS);
-        DevicesSavedData deviceSD = DevicesSavedData.load(serverLevel);
+        double vanillaField = EPGConfigs.server().vanillaStatorField.getF();
+        DevicesSavedData deviceSD = null;
+
         double sum = 0;
         for (Direction direction : Iterate.directions) {
             if (direction.getAxis() == axis)
                 continue;
             BlockPos statorPos = rotorPos.relative(direction);
             BlockState statorState = serverLevel.getBlockState(statorPos);
-            if (!(statorState.getBlock() instanceof ExcitationStatorBlock))
+
+            if (statorState.getBlock() instanceof ExcitationStatorBlock) {
+                if (!ExcitationStatorBlock.canPowerRotor(statorPos, statorState, rotorPos, rotorState))
+                    continue;
+                if (deviceSD == null)
+                    deviceSD = DevicesSavedData.load(serverLevel);
+                ExcitationStatorDevice device = deviceSD.getDevice(statorPos, ExcitationStatorDevice.class);
+                if (device != null)
+                    sum += device.getFieldStrength();
                 continue;
-            if (!ExcitationStatorBlock.canPowerRotor(statorPos, statorState, rotorPos, rotorState))
-                continue;
-            ExcitationStatorDevice device = deviceSD.getDevice(statorPos, ExcitationStatorDevice.class);
-            if (device != null)
-                sum += device.getFieldStrength();
+            }
+
+            if (CEEBlocks.STATOR.has(statorState)
+                    && StatorBlock.canPowerRotor(statorPos, statorState, rotorPos, rotorState))
+                sum += vanillaField;
         }
         return sum;
     }

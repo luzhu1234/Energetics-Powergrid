@@ -62,12 +62,6 @@ public class EPGSimulatedDevices {
                     EnergeticsPowerGrid.rl("excitation_stator"),
                     (type, level, pos, sd) -> new ExcitationStatorDevice(level, pos, sd, type)));
 
-    /** 逆变器设备：模拟直流-交流逆变输出（方波），兼有直通模式 */
-    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.inverter.InverterDevice>> INVERTER =
-            DEVICES.register("inverter", () -> new SimulatedDeviceType<>(
-                    EnergeticsPowerGrid.rl("inverter"),
-                    (type, level, pos, sd) -> new com.energeticspowergrid.content.inverter.InverterDevice(level, pos, sd, type)));
-
     /** NPN 三极管设备：模拟 NPN 型半导体开关/放大特性 */
     public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.transistor.TransistorDevice>> NPN_TRANSISTOR =
             DEVICES.register("npn_transistor", () -> new SimulatedDeviceType<>(

@@ -36,7 +36,6 @@ public class EPGCreativeTab {
                         output.accept(EPGBlocks.HEATING_COIL.asStack());       // 加热线圈
                         output.accept(EPGBlocks.REVERSING_SWITCH.asStack());   // 换向开关
                         output.accept(EPGBlocks.EXCITATION_STATOR.asStack());  // 励磁定子
-                        output.accept(EPGBlocks.INVERTER.asStack());           // 逆变器
                         output.accept(EPGBlocks.NPN_TRANSISTOR.asStack());     // NPN 三极管
                         output.accept(EPGBlocks.PNP_TRANSISTOR.asStack());     // PNP 三极管
                     })

@@ -1,5 +1,13 @@
 # Energetics Power Grid 更新日志
 
+## 1.2.4
+
+### 移除
+- **逆变器**：因自举设计缺陷（输出幅值为零时永远无法建立输出，重新放置或从直通切回后永久卡死）且维护成本过高，整体移除。方块、物品、配方、掉落表与相关配置项（`inverterResistance` / `inverterOutputResistance` / `inverterFrequency`）均已删除；**旧存档中已放置的逆变器方块会失效**。
+
+### 文档
+- 新增 README.md（模组介绍）。
+
 ## 1.2.3
 
 ### 修复

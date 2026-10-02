@@ -98,15 +98,6 @@ public class EPGConfigs {
         /** 励磁场强系数：默认 1（范围 0~1000）。B = I * U * y 中的系数 y，每个定子按励磁电流与电压之积缩放磁场强度 */
         public final ConfigFloat excitationStatorFieldFactor = f(1, 0, 1000, "excitationStatorFieldFactor",
                 "The y in B = I * U * y, scaling excitation strength per stator");
-        /** 逆变器直通接触电阻：默认 0.001Ω（范围 0.0001~10）。逆变器处于直通（旁路）模式时的等效串联电阻 */
-        public final ConfigFloat inverterResistance = f(0.001f, 0.0001f, 10, "inverterResistance",
-                "Contact resistance of the inverter's straight-through mode");
-        /** 逆变器交流输出内阻：默认 0.5Ω（范围 0.01~100）。交流输出侧的内部电阻，越大则带载后输出电压跌落越明显 */
-        public final ConfigFloat inverterOutputResistance = f(0.5f, 0.01f, 100, "inverterOutputResistance",
-                "Internal resistance of the inverter's AC output");
-        /** 逆变器输出频率：默认 50Hz（范围 1~400）。逆变器方波输出的频率，对应现实中 50Hz 市电标准 */
-        public final ConfigInt inverterFrequency = i(50, 1, 400, "inverterFrequency",
-                "Frequency of the inverter's square wave output in Hz");
         /** 单定子等效力场：默认 1000（范围 1~100000）。相当于一个原版（电力学）定子对转子拉力的励磁强度值，用于两套系统换算 */
         public final ConfigFloat excitationFieldPerStator = f(1000, 1, 100000, "excitationFieldPerStator",
                 "Excitation strength that matches one vanilla stator's pull on a rotor");

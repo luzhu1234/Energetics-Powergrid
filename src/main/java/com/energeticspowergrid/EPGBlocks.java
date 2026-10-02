@@ -194,23 +194,6 @@ public class EPGBlocks {
             .build()
             .register();
 
-    /** 逆变器：将直流电逆变为交流电输出（方波），直通模式下也可反向导通，模型复用电力学双开关 */
-    public static final BlockEntry<com.energeticspowergrid.content.inverter.InverterBlock> INVERTER = REGISTRATE.block("inverter", com.energeticspowergrid.content.inverter.InverterBlock::new)
-            .initialProperties(SharedProperties::stone)
-            .properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE).noOcclusion())
-            // 依据闭合状态选用电力学的双开关开/闭模型
-            .blockstate((c, p) -> DirectionalRolledDeviceBlock.generateBlockState(c, p,
-                    bs -> ResourceLocation.fromNamespaceAndPath("electroenergetics",
-                            bs.getValue(com.george_vi.electroenergetics.content.cut_off_switch.CutOffSwitchBlock.CLOSED)
-                                    ? "block/double_switch/block_closed"
-                                    : "block/double_switch/block")))
-            .transform(pickaxeOnly())
-            .item()
-            .model((c, p) -> p.withExistingParent(c.getName(),
-                    ResourceLocation.fromNamespaceAndPath("electroenergetics", "block/double_switch/block")))
-            .build()
-            .register();
-
     /**
      * 注册入口（占位方法）。
      * Registrate 的方块注册在类加载静态字段初始化时已完成，

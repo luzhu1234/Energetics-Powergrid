@@ -1,0 +1,160 @@
+{
+  "variants": {
+    "facing=up,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor"
+    },
+    "facing=up,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll"
+    },
+    "facing=up,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor"
+    },
+    "facing=up,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll"
+    },
+    "facing=up,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor"
+    },
+    "facing=up,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll"
+    },
+    "facing=down,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 180
+    },
+    "facing=down,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 180
+    },
+    "facing=down,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 180
+    },
+    "facing=down,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 180
+    },
+    "facing=down,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 180
+    },
+    "facing=down,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 180
+    },
+    "facing=north,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270
+    },
+    "facing=south,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270
+    },
+    "facing=south,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270
+    },
+    "facing=south,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270
+    },
+    "facing=south,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270
+    },
+    "facing=south,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270
+    },
+    "facing=east,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 270
+    },
+    "facing=west,logged_state=dry,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,logged_state=dry,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,logged_state=waterlogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,logged_state=waterlogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,logged_state=oillogged,roll=false": {
+      "model": "energeticspowergrid:block/transistor",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,logged_state=oillogged,roll=true": {
+      "model": "energeticspowergrid:block/transistor_roll",
+      "x": 270,
+      "y": 90
+    }
+  }
+}

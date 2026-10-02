@@ -18,11 +18,14 @@
   "energeticspowergrid.nodes.input_negative": "输入负极",
   "energeticspowergrid.nodes.output_positive": "输出正极",
   "energeticspowergrid.nodes.output_negative": "输出负极",
-  "block.energeticspowergrid.transistor": "三极管",
   "energeticspowergrid.nodes.base": "基极（B）",
   "energeticspowergrid.nodes.collector": "集电极（C）",
   "energeticspowergrid.nodes.emitter": "发射极（E）",
   "energeticspowergrid.gui.transistor.beta": "放大倍数（β）",
   "energeticspowergrid.gui.transistor.vbe": "导通电压（V_BE）",
-  "energeticspowergrid.gui.transistor.icmax": "最大集电极电流"
+  "energeticspowergrid.gui.transistor.icmax": "最大集电极电流",
+  "energeticspowergrid.display_source.frequency_meter": "频率表（三位小数）",
+  "energeticspowergrid.display_source.synchroscope": "同步钟（表盘时间）",
+  "block.energeticspowergrid.npn_transistor": "NPN 三极管",
+  "block.energeticspowergrid.pnp_transistor": "PNP 三极管"
 }

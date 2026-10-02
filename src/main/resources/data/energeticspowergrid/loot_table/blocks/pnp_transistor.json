@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "energeticspowergrid:transistor"
+          "name": "energeticspowergrid:pnp_transistor"
         }
       ],
       "rolls": 1.0

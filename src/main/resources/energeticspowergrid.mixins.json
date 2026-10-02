@@ -4,8 +4,12 @@
   "package": "com.energeticspowergrid.content.excitation.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AlternatorBrushesBlockEntityMixin",
     "AlternatorRotorBlockEntityMixin",
     "AlternatorRotorBlockPlacementHelperMixin",
+    "FrequencyMeterBlockEntityAccessor",
+    "KineticBlockEntityAccessor",
+    "SynchroscopeBlockEntityAccessor",
     "ThreePhaseAlternatorBrushesDeviceMixin"
   ],
   "injectors": {

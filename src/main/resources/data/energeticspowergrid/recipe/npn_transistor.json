@@ -14,6 +14,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "energeticspowergrid:transistor"
+    "id": "energeticspowergrid:npn_transistor"
   }
 }

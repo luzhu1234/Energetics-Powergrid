@@ -52,15 +52,6 @@ public class LightFixtureBlock extends DirectionalRolledDeviceBlock<LightFixture
 
     /** 灯具本体碰撞箱：底部一块 3 格厚（实际 0~3 像素）的吸顶底座，按朝向旋转。 */
     private static final VoxelShaper SHAPE = VoxelShaper.forDirectional(box(3.5, 0, 3.5, 12.5, 3, 12.5), Direction.UP);
-    /**
-     * 电气节点配置：定义两个接线点在方块内的相对坐标（x=3.5 和 x=12.5，y=2.5，z=8），
-     * 模拟电路通过这两个节点把灯具作为电阻接入电网。
-     */
-    public static final NodeConfigurator NODES = new NodeConfigurator.Builder()
-            .add(3.5f, 2.5f, 8f)
-            .add(12.5f, 2.5f, 8f)
-            .simple(Direction.UP);
-
     public LightFixtureBlock(Properties properties) {
         super(properties);
         // 默认状态：熄灭（POWER = 0）
@@ -102,16 +93,90 @@ public class LightFixtureBlock extends DirectionalRolledDeviceBlock<LightFixture
         return EPGSimulatedDevices.LIGHT_FIXTURE.get();
     }
 
-    /** 返回按朝向与滚动（ROLL）旋转后的全部节点坐标。 */
+    /**
+     * 接线点坐标表：与手写的 light_fixture_h（墙面）/ light_fixture_v（吸顶）模型中
+     * 端子几何的实际位置一一对应。灯具的方块状态使用手写的旋转组合（墙体模型
+     * 绕 Z 轴直立 + 按朝向的 Y 轴旋转），与 {@link NodeConfigurator} 的通用旋转
+     * 约定不一致——此前用 NodeConfigurator 旋转节点坐标，导致墙面放置时接线点
+     * 与模型上显示的端子错位，故改为显式查表。
+     */
+    /** v 模型（吸顶）的两个端子：底座两端沿 X 分布。 */
+    private static final Vec3 V_T1 = voxelOf(3.5, 2.5, 8), V_T2 = voxelOf(12.5, 2.5, 8);
+    /** v 模型滚转后：端子沿 Z 分布。 */
+    private static final Vec3 V_T1R = voxelOf(8, 2.5, 3.5), V_T2R = voxelOf(8, 2.5, 12.5);
+    /** h 模型（墙面，作者基准朝向 = 西）的两个端子：背板上竖直分布。 */
+    private static final Vec3 H_T1 = voxelOf(13.5, 3.5, 8), H_T2 = voxelOf(13.5, 12.5, 8);
+    /** h 模型滚转后：端子变为水平分布。 */
+    private static final Vec3 H_T1R = voxelOf(13.5, 8, 12.5), H_T2R = voxelOf(13.5, 8, 3.5);
+
+    /** 像素坐标转方块坐标（/16）。 */
+    private static Vec3 voxelOf(double x, double y, double z) {
+        return new Vec3(x / 16f, y / 16f, z / 16f);
+    }
+
+    /**
+     * 按朝向与滚转状态返回指定编号的接线点坐标（查表，见上方注释）。
+     */
+    private static Vec3 nodeOffset(Direction facing, boolean roll, int id) {
+        boolean first = id == 0;
+        return switch (facing) {
+            // 吸顶：v 模型；滚转后端子沿 Z 分布
+            case UP -> first ? (roll ? V_T1R : V_T1) : (roll ? V_T2R : V_T2);
+            // 朝下：v 模型绕 X 轴 180°，端子移到顶部（y=13.5）；滚转后再绕 Y 轴 90°
+            case DOWN -> first ? (roll ? voxelOf(8, 13.5, 3.5) : voxelOf(3.5, 13.5, 8))
+                               : (roll ? voxelOf(8, 13.5, 12.5) : voxelOf(12.5, 13.5, 8));
+            // 墙面：h 模型，端子在背板上竖直分布；滚转后水平分布
+            case WEST -> first ? (roll ? H_T1R : H_T1) : (roll ? H_T2R : H_T2);
+            // 朝东：h 模型绕 Y 轴 180°，端子对侧镜像
+            case EAST -> first ? (roll ? voxelOf(2.5, 8, 3.5) : voxelOf(2.5, 3.5, 8))
+                               : (roll ? voxelOf(2.5, 8, 12.5) : voxelOf(2.5, 12.5, 8));
+            // 朝北：h 模型绕 Y 轴 90°
+            case NORTH -> first ? (roll ? voxelOf(12.5, 8, 13.5) : voxelOf(8, 3.5, 13.5))
+                                : (roll ? voxelOf(3.5, 8, 13.5) : voxelOf(8, 12.5, 13.5));
+            // 朝南：h 模型绕 Y 轴 -90°
+            case SOUTH -> first ? (roll ? voxelOf(3.5, 8, 2.5) : voxelOf(8, 3.5, 2.5))
+                                : (roll ? voxelOf(12.5, 8, 2.5) : voxelOf(8, 12.5, 2.5));
+        };
+    }
+
+    /**
+     * 直接以方块状态查询接线点的<b>绝对世界坐标</b>：
+     * 在 {@link #nodeOffset} 给出的方块内相对偏移基础上叠加方块自身坐标。
+     * 供需要绝对坐标的场合（调试、渲染、外部工具）一步到位地调用，
+     * 与 CEE 节点框架计算实际接线位置用的是同一份查表数据，不会脱节。
+     *
+     * @param pos   方块的世界坐标
+     * @param state 灯具方块状态（提供 FACING 与 ROLL）
+     * @param id    节点编号（0/1，两个接线端子）
+     */
+    public static Vec3 absoluteNodePosition(BlockPos pos, BlockState state, int id) {
+        return nodeOffset(state.getValue(FACING), state.getValue(ROLL), id)
+                .add(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * 两个接线点的绝对坐标映射（编号 → 绝对坐标），见 {@link #absoluteNodePosition}。
+     */
+    public static Map<Integer, Vec3> absoluteNodePositions(BlockPos pos, BlockState state) {
+        Map<Integer, Vec3> map = new java.util.HashMap<>();
+        for (int id = 0; id < 2; id++)
+            map.put(id, absoluteNodePosition(pos, state, id));
+        return map;
+    }
+
+    /** 返回按朝向与滚动（ROLL）对齐模型端子后的全部节点坐标（相对偏移，框架叠加方块坐标）。 */
     @Override
     public Map<Integer, Vec3> getNodePositions(Level level, BlockPos pos, BlockState state) {
-        return NODES.getNodes(state.getValue(FACING), state.getValue(ROLL));
+        Map<Integer, Vec3> map = new java.util.HashMap<>();
+        for (int id = 0; id < 2; id++)
+            map.put(id, nodeOffset(state.getValue(FACING), state.getValue(ROLL), id));
+        return map;
     }
 
     /** 返回指定编号节点的世界相对坐标。 */
     @Override
     public Vec3 getNodePosition(Level level, BlockPos pos, BlockState state, int id) {
-        return NODES.getNodePos(state.getValue(FACING), state.getValue(ROLL), id);
+        return nodeOffset(state.getValue(FACING), state.getValue(ROLL), id);
     }
 
     /** 空手右键：若主手无物品，则从方块实体侧执行“取下灯泡”逻辑。 */

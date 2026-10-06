@@ -25,5 +25,13 @@
   "energeticspowergrid.display_source.frequency_meter": "Frequency Meter (3 decimals)",
   "energeticspowergrid.display_source.synchroscope": "Synchroscope (dial time)",
   "block.energeticspowergrid.npn_transistor": "NPN Transistor",
-  "block.energeticspowergrid.pnp_transistor": "PNP Transistor"
+  "block.energeticspowergrid.pnp_transistor": "PNP Transistor",
+  "block.energeticspowergrid.n_mosfet": "N-Channel MOSFET",
+  "block.energeticspowergrid.p_mosfet": "P-Channel MOSFET",
+  "energeticspowergrid.nodes.gate": "Gate (G)",
+  "energeticspowergrid.nodes.drain": "Drain (D)",
+  "energeticspowergrid.nodes.source": "Source (S)",
+  "energeticspowergrid.gui.mosfet.vth": "Threshold Voltage (V_GS(th))",
+  "energeticspowergrid.gui.mosfet.rdson": "On-Resistance (R_DS(on))",
+  "energeticspowergrid.gui.mosfet.idmax": "Max Drain Current"
 }

@@ -22,5 +22,13 @@
   "energeticspowergrid.display_source.frequency_meter": "频率表（三位小数）",
   "energeticspowergrid.display_source.synchroscope": "同步钟（表盘时间）",
   "block.energeticspowergrid.npn_transistor": "NPN 三极管",
-  "block.energeticspowergrid.pnp_transistor": "PNP 三极管"
+  "block.energeticspowergrid.pnp_transistor": "PNP 三极管",
+  "block.energeticspowergrid.n_mosfet": "N 沟道 MOS 管",
+  "block.energeticspowergrid.p_mosfet": "P 沟道 MOS 管",
+  "energeticspowergrid.nodes.gate": "栅极（G）",
+  "energeticspowergrid.nodes.drain": "漏极（D）",
+  "energeticspowergrid.nodes.source": "源极（S）",
+  "energeticspowergrid.gui.mosfet.vth": "阈值电压（V_GS(th)）",
+  "energeticspowergrid.gui.mosfet.rdson": "导通电阻（R_DS(on)）",
+  "energeticspowergrid.gui.mosfet.idmax": "最大漏极电流"
 }

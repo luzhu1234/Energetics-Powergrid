@@ -38,6 +38,8 @@ public class EPGCreativeTab {
                         output.accept(EPGBlocks.EXCITATION_STATOR.asStack());  // 励磁定子
                         output.accept(EPGBlocks.NPN_TRANSISTOR.asStack());     // NPN 三极管
                         output.accept(EPGBlocks.PNP_TRANSISTOR.asStack());     // PNP 三极管
+                        output.accept(EPGBlocks.N_MOSFET.asStack());           // N 沟道 MOS 管
+                        output.accept(EPGBlocks.P_MOSFET.asStack());           // P 沟道 MOS 管
                     })
                     .build());
 

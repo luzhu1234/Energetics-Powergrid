@@ -184,6 +184,28 @@ public class EPGBlocks {
             .build()
             .register();
 
+    /** N 沟道 MOS 管：电压驱动的半导体开关，栅极零电流、导通电阻低，适合低功耗与大电流开关，浅灰色外观 */
+    public static final BlockEntry<com.energeticspowergrid.content.mosfet.MosfetBlock> N_MOSFET = REGISTRATE.block("n_mosfet", com.energeticspowergrid.content.mosfet.MosfetBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/mosfet")))
+            .build()
+            .register();
+
+    /** P 沟道 MOS 管：与 N 沟道极性相反的 MOS 管（源极接高电位、栅极拉低导通），青色外观 */
+    public static final BlockEntry<com.energeticspowergrid.content.mosfet.PMosfetBlock> P_MOSFET = REGISTRATE.block("p_mosfet", com.energeticspowergrid.content.mosfet.PMosfetBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_CYAN).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/mosfet")))
+            .build()
+            .register();
+
     /** 励磁定子：为旋转转子提供励磁场强的定子绕组，与电力学发电机/电动机配合构建励磁系统 */
     public static final BlockEntry<ExcitationStatorBlock> EXCITATION_STATOR = REGISTRATE.block("excitation_stator", ExcitationStatorBlock::new)
             .initialProperties(SharedProperties::stone)

@@ -82,6 +82,26 @@ public class EPGSimulatedDevices {
                         return device;
                     }));
 
+    /** N 沟道 MOS 管设备：电压驱动开关，栅极绝缘零电流 + 低导通电阻 + 体二极管 */
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.mosfet.MosfetDevice>> N_MOSFET =
+            DEVICES.register("n_mosfet", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("n_mosfet"),
+                    (type, level, pos, sd) -> new com.energeticspowergrid.content.mosfet.MosfetDevice(level, pos, sd, type)));
+
+    /**
+     * P 沟道 MOS 管设备：与 N 沟道共用 MosfetDevice 实现，
+     * 工厂 lambda 中将 pChannel 标志置为 true 以区分极性。
+     */
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.mosfet.MosfetDevice>> P_MOSFET =
+            DEVICES.register("p_mosfet", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("p_mosfet"),
+                    (type, level, pos, sd) -> {
+                        com.energeticspowergrid.content.mosfet.MosfetDevice device =
+                                new com.energeticspowergrid.content.mosfet.MosfetDevice(level, pos, sd, type);
+                        device.pChannel = true;
+                        return device;
+                    }));
+
     /**
      * 将设备注册器挂载到模组事件总线上。
      *

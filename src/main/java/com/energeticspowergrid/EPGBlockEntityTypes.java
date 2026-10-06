@@ -67,6 +67,13 @@ public class EPGBlockEntityTypes {
                     .validBlock(EPGBlocks.PNP_TRANSISTOR)
                     .register();
 
+    /** MOS 管方块实体：N 沟道与 P 沟道 MOS 管共用同一方块实体类型，由方块实例区分极性 */
+    public static final BlockEntityEntry<com.energeticspowergrid.content.mosfet.MosfetBlockEntity> MOSFET =
+            REGISTRATE.blockEntity("mosfet", com.energeticspowergrid.content.mosfet.MosfetBlockEntity::new)
+                    .validBlock(EPGBlocks.N_MOSFET)
+                    .validBlock(EPGBlocks.P_MOSFET)
+                    .register();
+
     /**
      * 注册入口（占位方法）。
      * Registrate 的方块实体注册在类加载静态字段初始化时已完成，

@@ -206,6 +206,39 @@ public class EPGBlocks {
             .build()
             .register();
 
+    /** 电铃：挂墙安装的两端子电阻器件，通电后随电流大小敲铃发声（移植自电气时代报警铃），金属白外观 */
+    public static final BlockEntry<com.energeticspowergrid.content.bell.ElectricBellBlock> ELECTRIC_BELL = REGISTRATE.block("electric_bell", com.energeticspowergrid.content.bell.ElectricBellBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/electric_bell")))
+            .build()
+            .register();
+
+    /** 彩蛋电铃：与电铃同款方块，通电循环播放彩蛋音效（冰冰冰）；由电铃围 8 个冰合成，冰蓝外观 */
+    public static final BlockEntry<com.energeticspowergrid.content.bell.IceBellBlock> ICE_BELL = REGISTRATE.block("ice_bell", com.energeticspowergrid.content.bell.IceBellBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/electric_bell")))
+            .build()
+            .register();
+
+    /** 奶龙电铃：与电铃同款方块，通电循环播放奶龙大笑音效；拥有独立模型/贴图文件（nailong_bell）便于后续替换外观 */
+    public static final BlockEntry<com.energeticspowergrid.content.bell.NailongBellBlock> NAILONG_BELL = REGISTRATE.block("nailong_bell", com.energeticspowergrid.content.bell.NailongBellBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).noOcclusion())
+            .addLayer(() -> RenderType::cutout)
+            .transform(pickaxeOnly())
+            .item()
+            .model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/nailong_bell")))
+            .build()
+            .register();
+
     /** 励磁定子：为旋转转子提供励磁场强的定子绕组，与电力学发电机/电动机配合构建励磁系统 */
     public static final BlockEntry<ExcitationStatorBlock> EXCITATION_STATOR = REGISTRATE.block("excitation_stator", ExcitationStatorBlock::new)
             .initialProperties(SharedProperties::stone)

@@ -51,10 +51,14 @@ public class EnergeticsPowerGrid {
         EPGPartialModels.register();    // 注册部分模型（渲染用）
         EPGBlockEntityTypes.register(); // 注册方块实体类型
         EPGSimulatedDevices.register(modEventBus);  // 注册电力学模拟设备类型
+        EPGSounds.register(modEventBus);            // 注册音效事件（电铃/彩蛋电铃）
         EPGFanProcessingTypes.register(modEventBus); // 注册 Create 风扇处理类型（加热）
         EPGCreativeTab.register(modEventBus);        // 注册创造模式物品栏
         EPGConfigs.register(modContainer);           // 注册服务端配置文件
         EPGDisplaySources.register();                // 注册显示连接器数据源（频率表/同步钟）
+
+        // 注册雷击系统到 NeoForge 游戏总线（雷暴天对电气网络落雷，受配置总开关控制）
+        com.energeticspowergrid.content.lightning.LightningStrikeHandler.register();
 
         // 公共初始化阶段把数据源补挂到电力学的频率表/同步钟方块实体类型上
         modEventBus.addListener(EPGDisplaySources::attachToCEEBlockEntities);

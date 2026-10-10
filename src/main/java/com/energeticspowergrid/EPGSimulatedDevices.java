@@ -102,6 +102,12 @@ public class EPGSimulatedDevices {
                         return device;
                     }));
 
+    /** 电铃设备：20Ω 纯电阻，通电后按电流大小敲铃发声（移植自电气时代报警铃） */
+    public static final DeferredHolder<SimulatedDeviceType<?>, SimulatedDeviceType<com.energeticspowergrid.content.bell.ElectricBellDevice>> ELECTRIC_BELL =
+            DEVICES.register("electric_bell", () -> new SimulatedDeviceType<>(
+                    EnergeticsPowerGrid.rl("electric_bell"),
+                    (type, level, pos, sd) -> new com.energeticspowergrid.content.bell.ElectricBellDevice(level, pos, sd, type)));
+
     /**
      * 将设备注册器挂载到模组事件总线上。
      *

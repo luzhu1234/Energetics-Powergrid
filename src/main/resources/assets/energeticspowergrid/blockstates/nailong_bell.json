@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "energeticspowergrid:block/nailong_bell",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "energeticspowergrid:block/nailong_bell",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "energeticspowergrid:block/nailong_bell",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "energeticspowergrid:block/nailong_bell",
+      "y": 90
+    }
+  }
+}

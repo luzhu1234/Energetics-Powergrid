@@ -1,0 +1,25 @@
+{
+  "alarm_bell": {
+    "subtitle": "subtitles.energeticspowergrid.alarm_bell",
+    "sounds": [
+      "energeticspowergrid:alarm_bell"
+    ]
+  },
+  "alarm_bell_end": {
+    "sounds": [
+      "energeticspowergrid:alarm_bell_end"
+    ]
+  },
+  "ice_bell": {
+    "sounds": [
+      "energeticspowergrid:ice_bell"
+    ],
+    "subtitle": "subtitles.energeticspowergrid.ice_bell"
+  },
+  "nailong_bell": {
+    "sounds": [
+      "energeticspowergrid:nailong_bell"
+    ],
+    "subtitle": "subtitles.energeticspowergrid.nailong_bell"
+  }
+}

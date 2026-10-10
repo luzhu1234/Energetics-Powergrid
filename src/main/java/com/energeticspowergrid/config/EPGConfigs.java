@@ -116,6 +116,37 @@ public class EPGConfigs {
         /** 频率跌落恢复时间：默认 100 刻（范围 1~600）。频率跌落恢复到可用频率所需的刻数（100 刻 = 5 秒），越大恢复越慢 */
         public final ConfigInt frequencyDipDecayTicks = i(100, 1, 600, "frequencyDipDecayTicks",
                 "Ticks over which a frequency dip decays back to the attainable frequency, 100 = 5 seconds");
+        /** 雷击总开关：默认开启。关闭后雷暴天气不会对电气网络落雷，整个雷击系统静默 */
+        public final ConfigBool enableLightningStrikes = b(true, "enableLightningStrikes",
+                "Whether thunderstorms strike the highest electric node with a surge current");
+        /** 雷击冲击电流：默认 1000000A（范围 1000~10000000）。落雷时注入被击节点的诺顿电流源幅值；被击点电压上限 ≈ 电流 × 0.1Ω 通道电阻，默认值对应最高约 100kV 的冲击过电压 */
+        public final ConfigFloat lightningImpulseCurrent = f(1000000, 1000, 10000000, "lightningImpulseCurrent",
+                "Amplitude in amps of the Norton current source injected at the struck node, node voltage ceiling is about current * 0.1 ohm");
+        /** 雷击平均间隔：默认 1200 刻（范围 20~72000）。雷暴期间每个维度平均多少刻落一次雷（1200 刻 = 60 秒），按泊松节奏随机触发 */
+        public final ConfigInt lightningStrikeIntervalTicks = i(1200, 20, 72000, "lightningStrikeIntervalTicks",
+                "Average ticks between lightning strikes per thundering level, 1200 = 60 seconds");
+        /** 雷击冲击持续刻数：默认 2 刻（范围 1~10）。冲击电流源在被击节点上存在的刻数——微秒级雷击的时间对应，此阶段导线积温不足以烧毁（符合现实：雷电流本身不烧线） */
+        public final ConfigInt lightningStrikeDurationTicks = i(2, 1, 10, "lightningStrikeDurationTicks",
+                "How many ticks the surge current source stays injected at the struck node");
+        /** 闪络阈值梯度：默认 10000V/格（范围 1000~1000000）。被击点每高出对地表面 1 格，闪络所需的过电压就提高该值——模拟空气击穿场强（现实约 3MV/m，取可玩缩放值） */
+        public final ConfigFloat flashoverVoltsPerBlock = f(10000, 1000, 1000000, "flashoverVoltsPerBlock",
+                "Flashover voltage increase per block of air gap between the struck node and the earth surface below");
+        /** 闪络兜底阈值：默认 300000V（范围 1000~10000000）。被击点扫描不到任何放电目标（浮空结构等）时使用的固定闪络阈值 */
+        public final ConfigFloat flashoverFallbackVolts = f(300000, 1000, 10000000, "flashoverFallbackVolts",
+                "Flashover threshold used when no discharge target can be found near the struck node");
+        /** 电弧压降梯度：默认 50V/格（范围 1~10000）。工频续流电弧每格长度上的恒定压降（现实空气弧约 10~50V/cm，取可玩缩放值）——电源电压低于弧压降时电弧自然熄灭（拉长熄弧原理） */
+        public final ConfigFloat arcVoltsPerBlock = f(50, 1, 10000, "arcVoltsPerBlock",
+                "Constant voltage drop per block of arc length; a source below this times the gap length cannot sustain the arc");
+        /** 放电搜索半径：默认 4 格（范围 1~16）。闪络目标（电气设备/任意固体方块）与电弧伤人的搜索半径 */
+        public final ConfigInt dischargeSearchRadius = i(4, 1, 16, "dischargeSearchRadius",
+                "Search radius in blocks for flashover targets (electric devices, solid blocks) and nearby players");
+        /**
+         * 电弧最大安全上限：默认 0 = 无上限。闪络后工频续流电弧只要电源能维持弧压降就一直存在
+         * （与 CEE 高压开关电弧同逻辑：无定时器，纯物理判定熄弧），本值仅作防呆保险上限，
+         * 0 或负数表示不限制，完全由熄弧物理判定决定电弧寿命
+         */
+        public final ConfigInt arcDurationTicks = i(0, 0, 72000, "arcDurationTicks",
+                "Max safety cap for the power-follow arc in ticks, 0 = unlimited (arc dies only by physics)");
 
         /**
          * 配置名称，用于配置文件分节标识。

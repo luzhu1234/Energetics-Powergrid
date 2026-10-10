@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "IBI",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:ice"
+    },
+    "B": {
+      "item": "energeticspowergrid:electric_bell"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "energeticspowergrid:ice_bell"
+  }
+}

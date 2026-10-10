@@ -40,6 +40,9 @@ public class EPGCreativeTab {
                         output.accept(EPGBlocks.PNP_TRANSISTOR.asStack());     // PNP 三极管
                         output.accept(EPGBlocks.N_MOSFET.asStack());           // N 沟道 MOS 管
                         output.accept(EPGBlocks.P_MOSFET.asStack());           // P 沟道 MOS 管
+                        output.accept(EPGBlocks.ELECTRIC_BELL.asStack());      // 电铃
+                        output.accept(EPGBlocks.ICE_BELL.asStack());           // 彩蛋电铃
+                        output.accept(EPGBlocks.NAILONG_BELL.asStack());        // 奶龙电铃
                     })
                     .build());
 

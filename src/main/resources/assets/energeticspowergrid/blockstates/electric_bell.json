@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "energeticspowergrid:block/electric_bell",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "energeticspowergrid:block/electric_bell",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "energeticspowergrid:block/electric_bell",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "energeticspowergrid:block/electric_bell",
+      "y": 90
+    }
+  }
+}

@@ -74,6 +74,14 @@ public class EPGBlockEntityTypes {
                     .validBlock(EPGBlocks.P_MOSFET)
                     .register();
 
+    /** 电铃方块实体：承载服务端解算同步来的音量/音调，客户端据此驱动铃声播放 */
+    public static final BlockEntityEntry<com.energeticspowergrid.content.bell.ElectricBellBlockEntity> ELECTRIC_BELL =
+            REGISTRATE.blockEntity("electric_bell", com.energeticspowergrid.content.bell.ElectricBellBlockEntity::new)
+                    .validBlock(EPGBlocks.ELECTRIC_BELL)
+                    .validBlock(EPGBlocks.ICE_BELL)
+                    .validBlock(EPGBlocks.NAILONG_BELL)
+                    .register();
+
     /**
      * 注册入口（占位方法）。
      * Registrate 的方块实体注册在类加载静态字段初始化时已完成，

@@ -33,5 +33,12 @@
   "energeticspowergrid.nodes.source": "Source (S)",
   "energeticspowergrid.gui.mosfet.vth": "Threshold Voltage (V_GS(th))",
   "energeticspowergrid.gui.mosfet.rdson": "On-Resistance (R_DS(on))",
-  "energeticspowergrid.gui.mosfet.idmax": "Max Drain Current"
+  "energeticspowergrid.gui.mosfet.idmax": "Max Drain Current",
+  "block.energeticspowergrid.electric_bell": "Electric Bell",
+  "energeticspowergrid.nodes.bell_terminal": "Terminal",
+  "subtitles.energeticspowergrid.alarm_bell": "Electric Bell: Rings",
+  "block.energeticspowergrid.ice_bell": "Ice Bell",
+  "block.energeticspowergrid.nailong_bell": "Nailong Bell",
+  "subtitles.energeticspowergrid.ice_bell": "Electric Bell: Bing Bing Bing",
+  "subtitles.energeticspowergrid.nailong_bell": "Nailong: Hahahahaha"
 }

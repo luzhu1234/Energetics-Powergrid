@@ -10,25 +10,38 @@ import com.george_vi.electroenergetics.simulation.electrical_properties.NortonCo
  * <li><b>电压驱动</b>：栅极与沟道之间是 SiO₂ 绝缘层——本模型用 1 GΩ 的
  *     栅源绝缘电阻表示（三极管的基极要持续抽取 I_B = I_C/β 的电流）。
  *     稳态下栅极电流只有纳安级，控制回路几乎不消耗功率，也不需要
- *     "基极电流够不够"的计算——只看电压 V_GS 是否越过阈值；</li>
- * <li><b>低导通损耗</b>：导通后 D-S 之间是纯电阻 R_DS(on)（默认 0.1Ω），
+ *     "基极电流够不够"的计算——只看电压 V_GS；</li>
+ * <li><b>低导通损耗</b>：强驱动下沟道是纯电阻 R_DS(on)（默认 0.1Ω），
  *     而三极管饱和后有 ~2Ω 的等效饱和电阻——同样 10A 负载下 MOS 管只耗
- *     10W，三极管要耗 200W。大电流开关场景（高效电源、电机驱动）选 MOS 管；</li>
+ *     几瓦，三极管要耗上百瓦。大电流开关场景首选；</li>
  * <li><b>体二极管</b>：D-S 之间反并联一个寄生二极管（N 沟道：S→D 方向
- *     导通），这是 MOS 管的固有结构，正向电流可以"倒着"从源极流到漏极。</li>
+ *     导通），这是 MOS 管的固有结构。</li>
  * </ul>
  * <p>
- * <b>沟道模型</b>（以 N 沟道为基准，P 沟道电压取反跑同一套数学）：
+ * <b>沟道模型</b>（以 N 沟道为基准，P 沟道电压取反跑同一套数学）——
+ * 真实 MOSFET 的三个工作区，兼顾模拟放大与数字开关两种用途：
  * <ul>
- * <li>V_GS ≥ V_GS(th)：沟道导通。欧姆区 I = V_DS / R_DS(on)；当电流达到
- *     I_D max 后转入恒流限流分支（与欧姆分支在 I_D max·R_DS(on) 处连续），
- *     防止大电压源打出无限电流；</li>
- * <li>V_GS &lt; V_GS(th)：沟道截止（1MΩ）——体二极管仍然可能正向导通。</li>
+ * <li><b>截止区</b>（V_GS ≤ V_GS(th)）：沟道关断（1MΩ），体二极管仍可能
+ *     正向导通；</li>
+ * <li><b>饱和区/放大区</b>（V_GS &gt; V_th 且 V_DS ≥ 过驱动电压 Vov）：
+ *     平方律恒流 {@code I_D = k·Vov²/2}——电流只随栅压增长、与 V_DS 基本
+ *     无关，这就是<b>模拟放大</b>的工作区：把栅极偏置在阈值上方，小信号
+ *     调制 Vov 即得到跨导 {@code gm = k·Vov} 的受控电流；</li>
+ * <li><b>线性区/欧姆区</b>（V_GS &gt; V_th 且 V_DS &lt; Vov）：
+ *     {@code I_D = k·(Vov·V_DS − V_DS²/2)}——小 V_DS 下退化为电阻
+ *     {@code R = 1/(k·Vov)}，<b>数字开关</b>的工作区：强驱动（大 Vov）
+ *     时电阻逼近 R_DS(on)，满幅导通。</li>
  * </ul>
+ * 跨导系数 k 由可调参数 R_DS(on) 校准：{@code k = 1/(R_DS(on)·10)}，即
+ * 过驱动电压为 10V（如 12V 电源驱动 2V 阈值管）时沟道电阻恰为 R_DS(on)。
+ * 数字用途下强驱动进入欧姆区、损耗即 R_DS(on) 规格；模拟用途下弱驱动
+ * 进入饱和区、跨导随偏置可调。I_D max 只在饱和区/放大区限流——欧姆区
+ * 的开关电流不受它影响，数字满幅导通不受损。
  * <p>
  * <b>方向安全</b>：与三极管相同，继承 {@link NortonCoupleNonlinearProperties}
  * （CEE 二极管同款机制），求解器保证以语义方向回调 tick——切勿改用
  * MicroTicking 机制（节点对顺序随放置顺序翻转，方向敏感元件会坏）。
+ * 全模型为多项式，无指数/对数运算，牛顿迭代天然稳定。
  */
 public class MosfetElectricalProperties extends NortonCoupleNonlinearProperties {
 
@@ -52,19 +65,26 @@ public class MosfetElectricalProperties extends NortonCoupleNonlinearProperties 
     private static final double BODY_DIODE_R = 0.05;
     /** 截止电阻：沟道关断时的近似绝缘电阻。 */
     private static final double OFF_RESISTANCE = 1e6;
-    /** 限流分支的并联电导：1e-9 S，防止开路时矩阵奇异。 */
-    private static final double CLAMP_CONDUCTANCE = 1e-9;
+    /** 饱和区/限流.stamp 的电导下限：防止开路漏极导致矩阵奇异。 */
+    private static final double LEAKAGE = 1e-9;
+    /**
+     * R_DS(on) 的校准过驱动电压：k = 1/(R_DS(on)·VOV_REF)，即过驱动
+     * V_GS−V_th = 10V（典型 12V 驱动 − 2V 阈值）时欧姆区电阻恰为 R_DS(on)。
+     */
+    private static final double VOV_REF = 10;
 
     /** true = 栅源绝缘元件；false = 漏源沟道元件。 */
     private final boolean gate;
     /** 与同管另一个元件共享的工作点。 */
     private final SharedState state;
-    /** 阈值电压 V_GS(th)：V_GS 达到它沟道才导通。 */
+    /** 阈值电压 V_GS(th)：V_GS 达到它沟道才开始导通。 */
     private double vth = 2;
-    /** 导通电阻 R_DS(on)：沟道导通后的欧姆电阻。 */
+    /** 导通电阻 R_DS(on)：过驱动 10V 时欧姆区电阻（校准 k 用）。 */
     private double rdsOn = 0.1;
-    /** 最大漏极电流 I_D max：限流分支的目标电流。 */
+    /** 最大漏极电流 I_D max：饱和区/放大区的限流值。 */
     private double idMax = 10;
+    /** 跨导系数 k = 1/(R_DS(on)·VOV_REF)，由 configure 时更新。 */
+    private double k;
     /** 上一微刻的端电压差，作为本次牛顿迭代的首个初值。 */
     private double vOld;
 
@@ -73,17 +93,15 @@ public class MosfetElectricalProperties extends NortonCoupleNonlinearProperties 
         this.state = state;
     }
 
-    /** 每刻从设备同步三个可调参数。 */
+    /** 每刻从设备同步三个可调参数，并重推跨导系数 k。 */
     public void configure(double vth, double rdsOn, double idMax) {
         this.vth = vth;
         this.rdsOn = rdsOn;
         this.idMax = idMax;
+        this.k = 1 / (rdsOn * VOV_REF);
     }
 
-    /**
-     * 截止态的等效电导：1/1MΩ。覆写 gMin 交给基类处理反偏漏电导，
-     * 这里沟道截止直接用固定电阻表示。
-     */
+    /** 截止区电导：1/1MΩ（沟道关断）。 */
     @Override
     public double gMin() {
         return 1 / OFF_RESISTANCE;
@@ -119,29 +137,40 @@ public class MosfetElectricalProperties extends NortonCoupleNonlinearProperties 
             vOld = vd;
         }
 
-        double g = 1 / OFF_RESISTANCE;
-        double j = 0;
-        if (vgs >= vth) {
-            // 沟道导通：欧姆区电阻 R_DS(on)，带 I_D max 限流
-            if (vd >= idMax * rdsOn) {
-                // 恒流限流分支：I ≈ I_D max，与欧姆分支在 idMax·rdsOn 处连续
-                g = CLAMP_CONDUCTANCE;
-                j = -idMax;
+        double vov = vgs - vth;   // 过驱动电压 V_GS − V_GS(th)
+        double g, i;
+        if (vov <= 0) {
+            // 截止区：沟道关断
+            g = 1 / OFF_RESISTANCE;
+            i = 0;
+        } else {
+            if (vd < vov) {
+                // 线性区/欧姆区：I = k(Vov·V_DS − V_DS²/2)，
+                // 小 V_DS 时 R ≈ 1/(k·Vov) → 强驱动下逼近 R_DS(on)（数字开关工作区）。
+                // V_DS 为负时公式自然给出反向电流（沟道双向导通，同步整流行为）。
+                // 不做 I_D max 限流——数字满幅导通的电流不受影响。
+                g = Math.max(k * (vov - vd), LEAKAGE);
+                i = k * (vov * vd - vd * vd / 2);
             } else {
-                // 欧姆区（含反向：V_DS<0 时沟道照样双向导通，同步整流行为）
-                g = 1 / rdsOn;
-                j = 0;
+                // 饱和区/放大区：I = k·Vov²/2，只随栅压平方增长（模拟放大工作区）。
+                // I_D max 限流只在此区生效，保护"部分导通"状态下的过大电流
+                // （例如无负载硬驱动的短路工况）。
+                g = LEAKAGE;
+                i = 0.5 * k * vov * vov;
+                if (i > idMax) {
+                    i = idMax;
+                }
             }
         }
-        // 体二极管（N 沟道：阳极=S 阴极=D）：V_DS 低于 -V_F 后正向导通，
+        // 体二极管（N 沟道：阳极=S 阴极=D）：V_DS 低于 −V_F 后正向导通，
         // 与沟道状态无关——截止态下反向电流也能从这里走
         if (vd < -BODY_DIODE_VF) {
             g += 1 / BODY_DIODE_R;
-            // 二极管诺顿形式：I = g·(vd + V_F) = g·vd − (−g·V_F)
-            j += -BODY_DIODE_VF / BODY_DIODE_R;
+            i += (vd + BODY_DIODE_VF) / BODY_DIODE_R;
         }
-        // 诺顿等效：I(n1→n2) = g·vd − j；P 沟道电流方向镜像（电导不变）
+        // 诺顿等效：I(n1→n2) = g·vd − j → j = g·vd − I；
+        // P 沟道电流方向镜像（电导不变）
         conductance = g;
-        currentSource = p ? -j : j;
+        currentSource = p ? -(g * vd - i) : (g * vd - i);
     }
 }

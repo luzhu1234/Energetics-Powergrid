@@ -30,5 +30,12 @@
   "energeticspowergrid.nodes.source": "源极（S）",
   "energeticspowergrid.gui.mosfet.vth": "阈值电压（V_GS(th)）",
   "energeticspowergrid.gui.mosfet.rdson": "导通电阻（R_DS(on)）",
-  "energeticspowergrid.gui.mosfet.idmax": "最大漏极电流"
+  "energeticspowergrid.gui.mosfet.idmax": "最大漏极电流",
+  "block.energeticspowergrid.electric_bell": "电铃",
+  "energeticspowergrid.nodes.bell_terminal": "接线端子",
+  "subtitles.energeticspowergrid.alarm_bell": "电铃：响动",
+  "block.energeticspowergrid.ice_bell": "彩蛋电铃",
+  "block.energeticspowergrid.nailong_bell": "奶龙电铃",
+  "subtitles.energeticspowergrid.ice_bell": "电铃：冰冰冰",
+  "subtitles.energeticspowergrid.nailong_bell": "奶龙：哈哈哈哈哈哈哈哈"
 }

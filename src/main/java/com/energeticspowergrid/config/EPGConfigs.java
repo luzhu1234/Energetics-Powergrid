@@ -128,12 +128,22 @@ public class EPGConfigs {
         /** 雷击冲击持续刻数：默认 2 刻（范围 1~10）。冲击电流源在被击节点上存在的刻数——微秒级雷击的时间对应，此阶段导线积温不足以烧毁（符合现实：雷电流本身不烧线） */
         public final ConfigInt lightningStrikeDurationTicks = i(2, 1, 10, "lightningStrikeDurationTicks",
                 "How many ticks the surge current source stays injected at the struck node");
+        /**
+         * 雷电连续电流刻数：默认 60 刻（范围 0~1200）。闪络后电弧先由"雷电连续电流"维持
+         * （现实雷击的连续电流阶段：数十~数百安、可持续零点几秒，不依赖电网构成回路），
+         * 该期间电弧必然燃烧；期满后改由电网续流判据决定存亡（开路/无源网络的电弧在此后自然熄灭）。0 = 关闭（严格电网续流模型）
+         */
+        public final ConfigInt lightningContinuingCurrentTicks = i(60, 0, 1200, "lightningContinuingCurrentTicks",
+                "Ticks the arc is sustained by the lightning continuing current after flashover, before the grid-fed criterion takes over; 0 = disabled");
         /** 闪络阈值梯度：默认 10000V/格（范围 1000~1000000）。被击点每高出对地表面 1 格，闪络所需的过电压就提高该值——模拟空气击穿场强（现实约 3MV/m，取可玩缩放值） */
         public final ConfigFloat flashoverVoltsPerBlock = f(10000, 1000, 1000000, "flashoverVoltsPerBlock",
                 "Flashover voltage increase per block of air gap between the struck node and the earth surface below");
-        /** 闪络兜底阈值：默认 300000V（范围 1000~10000000）。被击点扫描不到任何放电目标（浮空结构等）时使用的固定闪络阈值 */
-        public final ConfigFloat flashoverFallbackVolts = f(300000, 1000, 10000000, "flashoverFallbackVolts",
-                "Flashover threshold used when no discharge target can be found near the struck node");
+        /**
+         * 闪络兜底阈值：默认 60000V（范围 1000~10000000）。被击点扫描不到任何放电目标（浮空结构等）时使用的固定闪络阈值。
+         * 注意必须低于冲击电压上限（lightningImpulseCurrent × 0.1Ω，默认 100000V），否则球形放电永远无法闪络
+         */
+        public final ConfigFloat flashoverFallbackVolts = f(60000, 1000, 10000000, "flashoverFallbackVolts",
+                "Flashover threshold used when no discharge target can be found near the struck node. Must stay below the surge voltage ceiling (impulse current x 0.1 ohm)");
         /** 电弧压降梯度：默认 50V/格（范围 1~10000）。工频续流电弧每格长度上的恒定压降（现实空气弧约 10~50V/cm，取可玩缩放值）——电源电压低于弧压降时电弧自然熄灭（拉长熄弧原理） */
         public final ConfigFloat arcVoltsPerBlock = f(50, 1, 10000, "arcVoltsPerBlock",
                 "Constant voltage drop per block of arc length; a source below this times the gap length cannot sustain the arc");
